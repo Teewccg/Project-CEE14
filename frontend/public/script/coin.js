@@ -1,0 +1,27 @@
+import { createCoin, deleteCoin, getCoins } from "./api.js";
+import { getRandomSafeSpot } from "./utils.js";
+const gameContainer = document.querySelector(".game-container");
+
+export async function handleCreateCoin() {
+    let {x,y} = getRandomSafeSpot();
+    console.log(x,y);
+  const payload = {
+    x:x,
+    y:y,
+  };
+
+  await createCoin(payload);   
+  const coinElement = document.createElement("div");
+    coinElement.classList.add("Coin", "grid-cell");
+    coinElement.innerHTML = `
+        <div class="Coin_shadow grid-cell"></div>
+        <div class="Coin_sprite grid-cell"></div>
+      `;
+
+      // Position the Element
+    const left = 16 * x + "px";
+    const top = 16 * y - 4 + "px";
+    coinElement.style.transform = `translate3d(${left}, ${top}, 0)`;
+
+    gameContainer.appendChild(coinElement);
+}
