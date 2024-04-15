@@ -2,30 +2,14 @@ import { createPlayer, deletePlayer, getPlayers,movePlayer } from "./api.js";
 import { getRandomSafeSpot } from "./utils.js";
 const gameContainer = document.querySelector(".game-container");
 
-export async function handleCreateMember() {
-    const label = document.getElementById("player-name");
-    const value = label.value;
-    console.log("Input Value:", value);
-
-    const {x,y} = getRandomSafeSpot();
-  const payload = {
-    name: value,
-    color: "red",
-    x:x,
-    y:y,
-  };
-
+export async function handleCreateMember(userName,x,y,payload){
+  await createPlayer(payload);
   /*
   await createPlayer(payload);
   const players = await getPlayers();
   console.log("Player ID:", players.data[0]._id);
   label.value = "";
   */
-
-  const playerId = await createPlayer(payload);
-  console.log("Player ID:", playerId);
-  label.value = "";
-
   const characterElement = document.createElement("div");
   characterElement.classList.add("Character", "grid-cell");
   characterElement.classList.add("you");
@@ -41,9 +25,9 @@ export async function handleCreateMember() {
       //playerElements[addedPlayer.id] = characterElement;
 
       //Fill in some initial state
-      characterElement.querySelector(".Character_name").innerText = value;
+      characterElement.querySelector(".Character_name").innerText = userName;
       characterElement.querySelector(".Character_coins").innerText = 0;
-      characterElement.setAttribute("data-color", 'red');
+      //characterElement.setAttribute("data-color", 'red');
       //characterElement.setAttribute("data-direction", addedPlayer.direction);
       const left = 16 * x + "px";
       const top = 16 * y - 4 + "px";

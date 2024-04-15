@@ -3,14 +3,17 @@ import { getRandomSafeSpot } from "./utils.js";
 const gameContainer = document.querySelector(".game-container");
 
 export async function handleCreateCoin() {
-    let {x,y} = getRandomSafeSpot();
+  let {x,y} = getRandomSafeSpot();
     console.log(x,y);
   const payload = {
     x:x,
     y:y,
   };
 
-  await createCoin(payload);   
+  await createCoin(payload);
+  setTimeout(async () => {
+    await handleCreateCoin();
+  }, 3000);
   const coinElement = document.createElement("div");
     coinElement.classList.add("Coin", "grid-cell");
     coinElement.innerHTML = `
