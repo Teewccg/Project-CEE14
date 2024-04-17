@@ -1,6 +1,6 @@
-import { createPlayer, getCoins, getPlayers, updateScore } from "./api.js";
-import { getRandomSafeSpot } from "./utils.js";
-import { obstacleCoordinates } from "./constants.js";
+import { createPlayer, getCoins, getPlayers, updateScore } from "../api.js";
+import { getRandomSafeSpot } from "../utils.js";
+import { obstacleCoordinates } from "../constants.js";
 import { removedCoin } from "./coin.js";
 const gameContainer = document.querySelector(".game-container");
 
@@ -79,7 +79,7 @@ export async function handleCreateMember(userName){
   function tryToCollectCoin(x,y) {
     const coins = getCoins(x,y);
     if (coins) {
-      const player = getPlayers();
+      //const player = getPlayers();
       updateScore(player);
       removedCoin(x,y);
     }

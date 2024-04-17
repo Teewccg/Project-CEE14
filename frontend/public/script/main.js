@@ -1,23 +1,20 @@
-import { handleCreateMember} from "./player.js";
-import { handleCreateCoin } from "./coin.js";
-import { getRandomSafeSpot } from "./utils.js";
+import { launchAnimation } from "/script/321.js";
 
+const playerInfo = document.querySelector(".player-info")
 let userName;
 
 document.addEventListener("DOMContentLoaded", () => {
   
-  const addMemberButton = document.getElementById("player-confirm"); // Change this to the correct ID
+  const addMemberButton = document.getElementById("player-confirm"); //get start game button
+  // when click button
+
   addMemberButton.addEventListener("click", () => {
-  console.log("HI");
     const label = document.getElementById("player-name");
-    userName = label.value;
-    console.log("Input Value:", userName);
+    // disable input name
     label.disabled = true;
-    addMemberButton.disabled = true;
-    addMemberButton.style.visibility = "hidden";
-    handleCreateMember(userName);
-    
-    handleCreateCoin();
+    // remove button
+    addMemberButton.remove();
+
+    launchAnimation();
   });
-  
 });

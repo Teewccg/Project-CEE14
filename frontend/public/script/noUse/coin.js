@@ -1,5 +1,5 @@
-import { createCoin, deleteCoin, getCoins } from "./api.js";
-import { getKeyString, getRandomSafeSpot } from "./utils.js";
+import { createCoin, deleteCoin, getCoins } from "../api.js";
+import { getKeyString, getRandomSafeSpot } from "../utils.js";
 const gameContainer = document.querySelector(".game-container");
 
 export async function handleCreateCoin() {
