@@ -29,19 +29,6 @@ export const getPlayer = async (req, res) => {
       res.status(404).json({ error : "not found"});
     };
   };
-
-export const getIndividualPlayers = async (req, res) => {
-    // TODO: implement this function
-    // res.status(501).send("Unimplemented");
-    try {
-    const id = req.params.id;
-    const players = await Player.findById(id);
-    res.status(200).json({data:players});
-    } catch (err) {
-      console.log(err);
-      res.status(404).json({ error : "not found"});
-    };
-  };
   
 export const deletePlayer = async (req, res) => {
     // TODO: implement this function
@@ -58,7 +45,6 @@ export const deletePlayer = async (req, res) => {
   };
 
 export const updateScore = async (req, res) => {
-
     try {
     const id = req.params.id;
     const player = await Player.findByIdAndUpdate(id , {$inc : {score : 1}} , {new : true});
@@ -69,17 +55,33 @@ export const updateScore = async (req, res) => {
     }
 }
 
-export const movePlayer = async (req, res) => {
+export const updatePlayer = async (req, res) => {
+  try {
+      // Extract player ID from request parameters
+      const playerId = req.params.id;
+      
+      // Extract new position data from request body
+      const { x, y } = req.body;
 
-    try {
-      const id = req.params.id;
-      const {newX , newY} = req.body;
-      const player = await Player.findById(id);
-      player.x = newX;
-      player.y = newY;
-      res.status(200).json({message : "move success" , data : player}) ;
-    } catch (err) {
-      res.status(500).json({message : "move failed"}) ;
-      console.log(err)
-    }
-}
+      // Find the player in the database by ID
+      const player = await Player.findById(playerId);
+
+      // If player not found, respond with 404 Not Found
+      if (!player) {
+          return res.status(404).json({ message: 'Player not found' });
+      }
+
+      // Update player's position
+      player.x = x;
+      player.y = y;
+
+      // Save the updated player data to the database
+      await player.save();
+
+      // Respond with the updated player data
+      res.status(200).json(player);
+  } catch (error) {
+      // If an error occurs, respond with 500 Internal Server Error
+      res.status(500).json({ message: error.message });
+  }
+};

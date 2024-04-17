@@ -21,4 +21,17 @@ const mapData = {
 
 // Options for Player Colors... these are in the same order as our sprite sheet
 const playerColors = ["blue", "red", "orange", "yellow", "green", "purple"];
-export { mapData , playerColors};
+const obstacleCoordinates=[
+  { x: 1, y: 11 },
+  { x: 4, y: 7 },
+  { x: 5, y: 7 },
+  { x: 6, y: 7 },
+  { x: 7, y: 4 },
+  { x: 7, y: 9 },
+  { x: 8, y: 6 },
+  { x: 8, y: 9 },
+  { x: 9, y: 6 },
+  { x: 9, y: 9 },
+  { x: 10, y: 6 },
+  { x: 12, y: 10 },]
+export { mapData , playerColors,obstacleCoordinates};

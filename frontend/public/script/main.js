@@ -1,6 +1,5 @@
 import { handleCreateMember} from "./player.js";
 import { handleCreateCoin } from "./coin.js";
-import { movePlayer } from "./api.js";
 import { getRandomSafeSpot } from "./utils.js";
 
 let userName;
@@ -13,15 +12,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const label = document.getElementById("player-name");
     userName = label.value;
     console.log("Input Value:", userName);
-    const {x,y} = getRandomSafeSpot();
-    const payload = {
-      name: userName,
-    };
     label.disabled = true;
     addMemberButton.disabled = true;
     addMemberButton.style.visibility = "hidden";
-    handleCreateMember(userName,x,y,payload);
+    handleCreateMember(userName);
     
     handleCreateCoin();
   });
+  
 });

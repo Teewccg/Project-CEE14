@@ -1,5 +1,5 @@
 import { createCoin, deleteCoin, getCoins } from "./api.js";
-import { getRandomSafeSpot } from "./utils.js";
+import { getKeyString, getRandomSafeSpot } from "./utils.js";
 const gameContainer = document.querySelector(".game-container");
 
 export async function handleCreateCoin() {
@@ -27,4 +27,14 @@ export async function handleCreateCoin() {
     coinElement.style.transform = `translate3d(${left}, ${top}, 0)`;
 
     gameContainer.appendChild(coinElement);
+}
+
+export async function removedCoin(x,y) {
+    const key = getKeyString(x, y);
+    const coinToRemove = gameContainer[key];
+    if (coinToRemove) {
+      deleteCoin();
+      gameContainer.removeChild(coinToRemove);
+      //delete coinElements[key];
+    }
 }
