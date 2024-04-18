@@ -1,8 +1,8 @@
-import Coin from "../models/coinModel.js";
-
+import Coin from '../models/coinModel.js';
 export const createCoin = async (req, res) => {
   try {
-    const newCoin = await Coin.create(req.body);
+    const newcoin = new Coin(req.body);
+    await newcoin.save();
 
     res.status(200).json({ message: "OK" });
   } catch (err) {
@@ -12,27 +12,33 @@ export const createCoin = async (req, res) => {
       res.status(500).json({ error: "Internal server error." });
     }
   }
-};
-
-export const getCoins = async (req, res) => {
-  const coins = await Coin.find(req.body);
-
-  res.status(200).json(coins);
-};
-
-export const deleteCoin = async (req, res) => {
-  // TODO2: implement this function
-  // HINT: you can serve the internet and find what method to use for deleting item.
-  // res.status(501).send("Unimplemented");
-  try {
-    const id = req.params.id;
-    const [x,y] = id.split('x');
-    console.log(x,y);
-    const deletedCoin = await Coin.findOneAndDelete({"x" : x, "y" : y});
-    res.status(200).send("coin Deleted")
-  } catch (err) {
-    console.log(err);
-    res.status(404).json({ error : "not found"});
-  }
-};
-
+  };
+  
+  export const getCoins = async (req, res) => {
+    const {x,y} = req.query;
+    try {
+      Coin.find({x,y});
+      res.status(200).json({ message: "found" });
+      console.log({x,y});
+    } catch (err) {
+      res.status(500).json({ error: 'Internal server error' });
+      console.error('Error retrieving coins:', err);
+    }
+  };
+  
+  export const deleteCoin = async (req, res) => {
+    // TODO: implement this function
+    // res.status(501).send("Unimplemented");
+    try {
+      const id = req.params.id;
+      //const [x,y] = id.split('x');
+      //console.log(x,y);
+      //const deletedCoin = await Coin.findOneAndDelete({"x" : x, "y" : y});
+      const deletedCoin = await Coin.findByIdAndDelete(id);
+      console.log(deletedCoin);
+      res.status(200).send("coin Deleted")
+    } catch (err) {
+      console.log(err);
+      res.status(404).json({ error : "not found"});
+    }
+  };

@@ -1,5 +1,5 @@
-import { createCoin, deleteCoin, getCoins } from "./api.js";
-import { getRandomSafeSpot } from "./utils.js";
+import { createCoin, deleteCoin, getCoins, getOnePlayer, updateScore } from "./api.js";
+import { getRandomSafeSpot, createName } from "./utils.js";
 import { createPlayer } from "./api.js";
 import { obstacleCoordinates } from "./constants.js";
 
@@ -7,6 +7,8 @@ const playerInfo = document.querySelector(".player-info")
 const gameContainer = document.querySelector(".game-container");
 let playable = true;
 let userName;
+let score = 0;
+let playerID;
 
 // create a coin constantly
 export async function handleCreateCoin() {
@@ -21,9 +23,11 @@ export async function handleCreateCoin() {
     if(playable){
       setTimeout(async () => {
       await handleCreateCoin();
-    }, 3000);
+    }, 500);
     const coinElement = document.createElement("div");
       coinElement.classList.add("Coin", "grid-cell");
+      coinElement.id = `${x},${y}`;
+      coinElement.dataset.position = `${x},${y}`;
       coinElement.innerHTML = `
           <div class="Coin_shadow grid-cell"></div>
           <div class="Coin_sprite grid-cell"></div>
@@ -46,7 +50,10 @@ export async function handleCreateMember(userName){
       const payload = {
         name: userName,
       };
-    await createPlayer(payload);
+
+    const player = await createPlayer(payload);
+    playerID = player.data._id;
+    console.log(playerID);
     const characterElement = document.createElement("div");
     characterElement.classList.add("Character", "grid-cell");
     characterElement.classList.add("you");
@@ -59,7 +66,7 @@ export async function handleCreateMember(userName){
           </div>
           <div class="Character_you-arrow"></div>
     `);
-        
+  
         characterElement.querySelector(".Character_name").innerText = userName;
         characterElement.querySelector(".Character_coins").innerText = 0;
         let left = 16 * x + "px";
@@ -94,6 +101,8 @@ export async function handleCreateMember(userName){
             let newX = 16 * x + "px"; 
             let newY = 16 * y - 4 + "px"; 
             characterElement.style.transform = `translate3d(${newX}, ${newY}, 0)`;
+            let newScore = tryToCollectCoin(x,y,player);
+            characterElement.querySelector(".Character_coins").innerText = newScore;
           }
          
     }
@@ -105,6 +114,23 @@ export async function handleCreateMember(userName){
           !obstacleCoordinates.some(coord => coord.x === x && coord.y === y)
       );
   }
+    function tryToCollectCoin(x,y,player) {
+      const payload = {
+        "x" : x,
+        "y" : y
+      };
+      const coin = getCoins(payload);
+      if (coin) {
+        // delete coinElement
+        const position = `${x},${y}`;
+        const coinElement = gameContainer.querySelector(`.Coin[data-position="${position}"]`);
+        if (coinElement) {
+          coinElement.remove(); // Remove the coin element from the DOM
+          score++;
+      }
+      }
+      return score;
+    }
   }
   export async function handleResetGame() {
     const timer = document.querySelector(".Countdown");
@@ -136,12 +162,18 @@ export async function endAnimation(countdownDiv) {
     gameContainer.appendChild(playAgainDiv);
 
     playAgainButton.addEventListener("click", () => {
+      score = 0;
       playAgainButton.remove();
       gameDiv.remove();
       handleResetGame();
     });
     
     playable = false;
+    const payload = {
+      name : userName,
+      score : score
+    };
+    await updateScore(playerID, payload);
 }
 
 // game countdown
@@ -171,7 +203,12 @@ export async function launchGame(countdownDiv) {
 export async function launchAnimation() {
 
   const label = document.getElementById("player-name");
-  userName = label.value;
+  console.log(label);
+  if (label.value == "") {
+    userName = createName();
+  } else {
+    userName = label.value;
+  }
   // create countdown box
   var countdownDiv = document.createElement("div");
   countdownDiv.className = "Countdown";

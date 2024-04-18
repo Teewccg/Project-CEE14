@@ -1,19 +1,31 @@
 import { BACKEND_URL } from "../script/config.js";
 
 export async function getPlayers() {
-  const players = await fetch(`${BACKEND_URL}/players`).then((r) => r.json());
 
-  return players;
+  const players = await fetch(`${BACKEND_URL}/players`, {
+    method: "GET",
+  })
+  return await players.json();
+
+}
+
+export async function getOnePlayer(id) {
+  const response = await fetch(`${BACKEND_URL}/players/${id}`, {
+    method: "GET",
+  })
+  return await response.json();
+
 }
 
 export async function createPlayer(player) {
-  await fetch(`${BACKEND_URL}/players`, {
+  const response = await fetch(`${BACKEND_URL}/players`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(player),
   })
+  return await response.json();
 }
 
 export async function deletePlayer(id, player) {
@@ -22,7 +34,7 @@ export async function deletePlayer(id, player) {
   });
 }
 
-export async function getCoins(x,y) {
+export async function getCoins(coin) {
     const coins = await fetch(`${BACKEND_URL}/coins`).then((r) => r.json());
   
     return coins;
@@ -45,12 +57,12 @@ export async function createCoin(coin) {
     });
   }
 
-export async function updateScore(id, player) {
-  await fetch(`${BACKEND_URL}/players/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(player),
-  })
-}
+  export async function updateScore(id, player) {
+    await fetch(`${BACKEND_URL}/players/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(player),
+    })
+  }

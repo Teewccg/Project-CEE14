@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-const playerSchema = new mongoose.Schema({
+const itemSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    default: "you"
+    default: "you",
   },
   score: {
     type: Number,
@@ -13,6 +13,6 @@ const playerSchema = new mongoose.Schema({
   },
 });
 
-const Player = mongoose.model("Player", playerSchema);
+const Player = mongoose.model("Player", itemSchema);
 
 export default Player;

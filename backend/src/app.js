@@ -11,10 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // allow request from other origin (Frontend which is at different port)
-app.use(cors({
-    origin: 'http://35.168.209.233:3221',
-    optionsSuccessStatus: 200
-}));
+app.use(cors());
 
 // use routes
 app.use("/players", PlayerRoute);

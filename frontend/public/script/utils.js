@@ -2,7 +2,7 @@ import { mapData } from './constants.js';
 function randomFromArray(array) {
     return array[Math.floor(Math.random() * array.length)];
   }
-function getKeyString(x, y) {
+  function getKeyString(x, y) {
     return `${x}x${y}`;
 }
   
@@ -77,4 +77,4 @@ function getRandomSafeSpot() {
     ]);
 }
 
-export { randomFromArray, getKeyString, isSolid, getRandomSafeSpot };
+export { randomFromArray, getKeyString, isSolid, getRandomSafeSpot, createName};
