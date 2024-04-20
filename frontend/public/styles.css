@@ -32,6 +32,57 @@ html, body {
   align-items: flex-end
 }
 
+.leaderboard-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1em;
+  display: flex;
+  gap: 0.5 em;
+  align-items: center;
+}
+
+.leaderboard-container table {
+  /* Your CSS styles here */
+  width: 100%; /* Make the table fill the container */
+  border-collapse: collapse; /* Collapse the borders */
+}
+
+/* Style the table headers */
+.leaderboard-container th {
+  background-color: #f2f2f2; /* Light gray background */
+  padding: 8px; /* Add padding */
+  text-align: center; /* Align text to the left */
+}
+
+.leaderboard-container td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+/* Style the table cells */
+.leaderboard-container tr {
+  border: 1px solid #ddd; /* Add borders */
+  padding: 8px; /* Add padding */
+  background-color: #a1baf9;
+  font-family: inherit;
+  font-weight: bold;
+}
+
+.leaderboard-container tr:first-child {
+  background-color: #ACA7FA; /* specified background color for last row */
+}
+
+/* Hover effect on rows */
+.leaderboard-container tr:hover {
+  background-color: #f2f2f2; /* Darker background color on hover */
+}
+
+.leaderboard-container tr.playing-player {
+  background-color: #ACA7FA; /* Set background color for the playing player's row */
+}
+
 label {
   display: block;
   font-weight: bold;
@@ -93,7 +144,7 @@ button:active {
   left: 5px;
   width: 7px;
   height: 5px;
-  background: url(/images/arrow.png) no-repeat no-repeat;
+  background: url(/images/arrow-yellow.png) no-repeat no-repeat;
 }
 .Character_sprite {
   overflow: hidden;
@@ -142,7 +193,7 @@ button:active {
 
 /* Coins */
 .Coin_sprite {
-  background: url(/images/coin.png) no-repeat no-repeat;
+  background: url(/images/bone.png) no-repeat no-repeat;
   animation: coinFloat 0.8s linear infinite alternate-reverse;
 }
 @keyframes coinFloat {
@@ -150,7 +201,7 @@ button:active {
   to { transform: translateY(5px) }
 }
 .Coin_shadow {
-  background: url(/images/coin-shadow.png) no-repeat no-repeat;
+  background: url(/images/bone-shadow.png) no-repeat no-repeat;
 }
 .Countdown{
   font-weight: bold;
@@ -192,7 +243,17 @@ button:active {
 #player-reset{
   height: 17px;
   font-size: 8px;
-  transform: translate3d(94px, 105px, 0);
+  transform: translate3d(70px, 105px, 0);
   border-bottom: 1px solid #1e830b;
   border-radius: 2px;
 }
+
+#leaderboard{
+  height: 17.6px;
+  font-size: 8px;
+  transform: translate3d(120px, 82.5px, 0);
+  border-bottom: 1px solid #1e830b;
+  border-radius: 2px;
+}
+
+

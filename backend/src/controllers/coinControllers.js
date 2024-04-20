@@ -17,8 +17,8 @@ export const createCoin = async (req, res) => {
   export const getCoins = async (req, res) => {
     const {x,y} = req.query;
     try {
-      Coin.find({x,y});
-      res.status(200).json({ message: "found" });
+      const coin = await Coin.find({x,y});
+      res.status(200).json(coin);
       console.log({x,y});
     } catch (err) {
       res.status(500).json({ error: 'Internal server error' });
@@ -31,9 +31,6 @@ export const createCoin = async (req, res) => {
     // res.status(501).send("Unimplemented");
     try {
       const id = req.params.id;
-      //const [x,y] = id.split('x');
-      //console.log(x,y);
-      //const deletedCoin = await Coin.findOneAndDelete({"x" : x, "y" : y});
       const deletedCoin = await Coin.findByIdAndDelete(id);
       console.log(deletedCoin);
       res.status(200).send("coin Deleted")

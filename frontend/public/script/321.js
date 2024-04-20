@@ -1,14 +1,20 @@
 import { createCoin, deleteCoin, getCoins, getOnePlayer, updateScore } from "./api.js";
-import { getRandomSafeSpot, createName } from "./utils.js";
+import { getRandomSafeSpot, createName, randomFromArray } from "./utils.js";
 import { createPlayer } from "./api.js";
-import { obstacleCoordinates } from "./constants.js";
+import { obstacleCoordinates, playerColors } from "./constants.js";
+import { handleLeaderboard } from "./leaderboard.js";
 
 const playerInfo = document.querySelector(".player-info")
 const gameContainer = document.querySelector(".game-container");
-let playable = true;
-let userName;
-let score = 0;
+const leaderboardContainer = document.querySelector(".leaderboard-container");
+
+let userName = "";
+let player;
 let playerID;
+let score = 0;
+
+let playable = true;
+let replay=false;
 
 // create a coin constantly
 export async function handleCreateCoin() {
@@ -47,16 +53,17 @@ export async function handleCreateCoin() {
 // create a player character
 export async function handleCreateMember(userName){
     let {x,y} = getRandomSafeSpot();
-      const payload = {
-        name: userName,
-      };
-
-    const player = await createPlayer(payload);
-    playerID = player.data._id;
-    console.log(playerID);
+    if(!replay){
+        const payload = {
+          name: userName,
+        };
+         let player = await createPlayer(payload);
+        playerID = player.data._id;
+    }
     const characterElement = document.createElement("div");
     characterElement.classList.add("Character", "grid-cell");
     characterElement.classList.add("you");
+    characterElement.setAttribute("data-color", randomFromArray(playerColors));
     characterElement.innerHTML = (`
           <div class="Character_shadow grid-cell"></div>
           <div class="Character_sprite grid-cell"></div>
@@ -82,6 +89,7 @@ export async function handleCreateMember(userName){
         
       // Define handleArrowPress function
       function handleArrowPress(event) {
+        event.preventDefault();
         if (!playable) return;
           let xOffset = 0;
           let yOffset = 0;
@@ -91,8 +99,10 @@ export async function handleCreateMember(userName){
               yOffset = 1;
           } else if (event.key === "ArrowLeft") {
               xOffset = -1;
+              characterElement.setAttribute("data-direction","left");
           } else if (event.key === "ArrowRight") {
               xOffset = 1;
+              characterElement.setAttribute("data-direction","right");
           }
           if(isValidPosition(x+xOffset, y + yOffset, obstacleCoordinates)){
             x += xOffset; // Update character's grid x position
@@ -101,7 +111,7 @@ export async function handleCreateMember(userName){
             let newX = 16 * x + "px"; 
             let newY = 16 * y - 4 + "px"; 
             characterElement.style.transform = `translate3d(${newX}, ${newY}, 0)`;
-            let newScore = tryToCollectCoin(x,y,player);
+            let newScore = tryToCollectCoin(x,y);
             characterElement.querySelector(".Character_coins").innerText = newScore;
           }
          
@@ -114,7 +124,7 @@ export async function handleCreateMember(userName){
           !obstacleCoordinates.some(coord => coord.x === x && coord.y === y)
       );
   }
-    function tryToCollectCoin(x,y,player) {
+    function tryToCollectCoin(x,y) {
       const payload = {
         "x" : x,
         "y" : y
@@ -137,43 +147,90 @@ export async function handleCreateMember(userName){
     timer.remove();
     gameContainer.innerHTML="";
     playable=true;
+    score=0;
+    replay=true;
     launchAnimation(userName);
   }
 
 // game over animation
 export async function endAnimation(countdownDiv) {
+    playable = false;
     countdownDiv.style.backgroundColor = "red";
 
     var gameDiv = document.createElement("div");
     gameDiv.id = "game-over";
     gameDiv.innerText= "GameOver";
     var playAgainDiv = document.createElement("div");
+    var leaderBoardDiv = document.createElement("div");
+
 
     // Create the "play again" button
     var playAgainButton = document.createElement("button");
     playAgainButton.id = "player-reset";
     playAgainButton.innerText = "Play again";
 
+    //Create the "leader board" button
+    var leaderBoardButton = document.createElement("button");
+    leaderBoardButton.id = "leaderboard";
+    leaderBoardButton.innerText = "Leader Board";
+
     // Append the button to the div
     playAgainDiv.appendChild(playAgainButton);
+    leaderBoardDiv.appendChild(leaderBoardButton);
 
     // Append the div to the game container
     gameContainer.appendChild(gameDiv);
     gameContainer.appendChild(playAgainDiv);
+    gameContainer.appendChild(leaderBoardDiv);
 
     playAgainButton.addEventListener("click", () => {
       score = 0;
+      while (leaderboardContainer.firstChild) {
+        leaderboardContainer.removeChild(leaderboardContainer.firstChild);
+    }
       playAgainButton.remove();
       gameDiv.remove();
       handleResetGame();
     });
+    leaderBoardButton.addEventListener("click",async () => {
+      let table;
+      try {
+        player = await getOnePlayer(playerID);
+        if(player.score<score){
+          playable = false;
+        const payload = {
+          name : userName,
+          score : score
+        };
+        await updateScore(playerID, payload);
+        }
+        table = await handleLeaderboard(player);
+        if (table) {
+          // Clear any existing content
+          while (leaderboardContainer.firstChild) {
+            leaderboardContainer.removeChild(leaderboardContainer.firstChild);
+        }
+            // Append the new table
+            leaderboardContainer.appendChild(table);
+        } else {
+            console.error("Table is null or undefined.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+    });
     
-    playable = false;
+    player = await getOnePlayer(playerID);
+    if(player.score<score){
+      playable = false;
     const payload = {
       name : userName,
       score : score
     };
     await updateScore(playerID, payload);
+    }
+
+    
 }
 
 // game countdown
@@ -204,10 +261,12 @@ export async function launchAnimation() {
 
   const label = document.getElementById("player-name");
   console.log(label);
-  if (label.value == "") {
-    userName = createName();
-  } else {
-    userName = label.value;
+  if (userName == "") {
+    if(label.value == "" ){
+      userName = createName();
+    }else{
+      userName = label.value;
+    }
   }
   // create countdown box
   var countdownDiv = document.createElement("div");
