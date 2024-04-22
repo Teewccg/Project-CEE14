@@ -10,11 +10,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   addMemberButton.addEventListener("click", () => {
     const label = document.getElementById("player-name");
+    userName = label.value;
+    if (userName == "") {
+      alert("Please enter your name.");
+    }else{
     // disable input name
     label.disabled = true;
     // remove button
     addMemberButton.remove();
 
     launchAnimation();
+    }
+    
   });
 });

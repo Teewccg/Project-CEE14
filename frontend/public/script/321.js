@@ -1,4 +1,4 @@
-import { createCoin, deleteCoin, getCoins, getOnePlayer, updateScore } from "./api.js";
+import { createCoin, getCoins, getOnePlayer, updateScore, getUserByUsername } from "./api.js";
 import { getRandomSafeSpot, createName, randomFromArray } from "./utils.js";
 import { createPlayer } from "./api.js";
 import { obstacleCoordinates, playerColors } from "./constants.js";
@@ -53,13 +53,21 @@ export async function handleCreateCoin() {
 // create a player character
 export async function handleCreateMember(userName){
     let {x,y} = getRandomSafeSpot();
-    if(!replay){
-        const payload = {
+    const existingUser = await getUserByUsername(userName);
+    if (existingUser) {
+      // User already exists, get the _id of the existing user
+      playerID = existingUser._id;
+      console.log(`User ${userName} already exists with ID: ${playerID}`);
+    } else {
+      // User doesn't exist, create a new one
+      const payload = {
           name: userName,
-        };
-         let player = await createPlayer(payload);
-        playerID = player.data._id;
-    }
+      };
+
+      const newPlayer = await createPlayer(payload);
+      playerID = newPlayer.data._id;
+      console.log(`Created new user ${userName} with ID: ${playerID}`);
+  }
     const characterElement = document.createElement("div");
     characterElement.classList.add("Character", "grid-cell");
     characterElement.classList.add("you");
@@ -83,9 +91,7 @@ export async function handleCreateMember(userName){
 
         if (playable) {
           document.addEventListener("keydown", handleArrowPress);
-      }else{
-        console.log("K");
-      }
+        }
         
       // Define handleArrowPress function
       function handleArrowPress(event) {
@@ -154,6 +160,33 @@ export async function handleCreateMember(userName){
 
 // game over animation
 export async function endAnimation(countdownDiv) {
+    let table;
+    if (replay) {
+      try {
+        player = await getOnePlayer(playerID);
+        if(player.score<score){
+          playable = false;
+        const payload = {
+          name : userName,
+          score : score
+        };
+        await updateScore(playerID, payload);
+        }
+        table = await handleLeaderboard(player);
+        if (table) {
+          // Clear any existing content
+          while (leaderboardContainer.firstChild) {
+            leaderboardContainer.removeChild(leaderboardContainer.firstChild);
+        }
+            // Append the new table
+            leaderboardContainer.appendChild(table);
+        } else {
+            console.error("Table is null or undefined.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+    }
     playable = false;
     countdownDiv.style.backgroundColor = "red";
 
@@ -185,9 +218,12 @@ export async function endAnimation(countdownDiv) {
 
     playAgainButton.addEventListener("click", () => {
       score = 0;
+      // after press playAgainButton, the score will be not shown.
+      /*
       while (leaderboardContainer.firstChild) {
         leaderboardContainer.removeChild(leaderboardContainer.firstChild);
     }
+    */
       playAgainButton.remove();
       gameDiv.remove();
       handleResetGame();
@@ -235,7 +271,7 @@ export async function endAnimation(countdownDiv) {
 
 // game countdown
 export async function launchGame(countdownDiv) {
-    let countdown = 10;
+    let countdown = 15;
     
     if (!countdownDiv) {
         console.error("Element with class 'Countdown' not found.");
@@ -261,13 +297,13 @@ export async function launchAnimation() {
 
   const label = document.getElementById("player-name");
   console.log(label);
+  userName = label.value;
   if (userName == "") {
-    if(label.value == "" ){
-      userName = createName();
-    }else{
-      userName = label.value;
-    }
+    userName = createName();
+  }else{
+    userName = label.value;
   }
+
   // create countdown box
   var countdownDiv = document.createElement("div");
   countdownDiv.className = "Countdown";

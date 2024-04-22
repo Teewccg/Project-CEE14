@@ -17,6 +17,11 @@ export async function getOnePlayer(id) {
 
 }
 
+export async function getUserByUsername(username) {
+  const players = await getPlayers();
+  return players.find(player => player.name === username);
+}
+
 export async function createPlayer(player) {
   const response = await fetch(`${BACKEND_URL}/players`, {
     method: "POST",
