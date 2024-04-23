@@ -321,11 +321,11 @@ button:active {
   .game-container { 
     background-size: contain;
     background-position: center;
-    transform: scale(4);
+    transform: scale(3);
   }
   .leaderboard-container {
-    padding: 60px 80px 0px 0px;
-    transform: scale(1.5);
+    padding: 100px 20px 0px 0px;
+    transform: scale(1.2);
   }
   .player-info {
     padding: 50px 0px 0px 100px;
@@ -340,8 +340,8 @@ button:active {
     transform: scale(3);
   }
   .leaderboard-container {
-    padding: 40px 40px 0px 0px;
-    transform : scale(1.2);
+    padding: 5px 10px 0px 0px;
+    transform : scale(0.9);
   }
 }
 
@@ -364,8 +364,8 @@ button:active {
     transform: scale(3);
   }
   .leaderboard-container {
-    padding: 80px 80px 0px 0px;
-    transform : scale(2);
+    padding: 10px 10px 0px 0px;
+    transform : scale(1);
   }
 }
 
@@ -390,6 +390,22 @@ button:active {
   .leaderboard-container {
     padding: 4px 5px 0px 0px;
     transform : scale(0.95);
+  }
+}
+
+@media (min-height : 1000px) and (min-width : 1025px) {
+  .game-container { 
+    background-size: contain;
+    background-position: center;
+    transform: scale(4);
+  }
+  .leaderboard-container {
+    padding: 100px 80px 0px 0px;
+    transform: scale(1.2);
+  }
+  .player-info {
+    padding: 50px 0px 0px 100px;
+    transform: scale(2);
   }
 }
 

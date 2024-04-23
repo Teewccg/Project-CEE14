@@ -29,7 +29,7 @@ export async function handleCreateCoin() {
     if(playable){
       setTimeout(async () => {
       await handleCreateCoin();
-    }, 500);
+    }, 200);
     const coinElement = document.createElement("div");
       coinElement.classList.add("Coin", "grid-cell");
       coinElement.id = `${x},${y}`;
@@ -283,7 +283,7 @@ export async function endAnimation(countdownDiv) {
 
 // game countdown
 export async function launchGame(countdownDiv) {
-    let countdown = 15;
+    let countdown = 60;
     
     if (!countdownDiv) {
         console.error("Element with class 'Countdown' not found.");
