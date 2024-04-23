@@ -40,6 +40,7 @@ html, body {
   display: flex;
   gap: 0.5 em;
   align-items: center;
+  transform: scale(1);
 }
 
 .leaderboard-container table {
@@ -254,5 +255,147 @@ button:active {
   border-bottom: 1px solid #1e830b;
   border-radius: 2px;
 }
+
+/* รูปยังเล็กไป ต้องแก้ที่ขนาดรูปภาพ background ที่ export */
+@media (max-width : 440px) {
+  .game-container { 
+    background-size: contain;
+    background-position: center;
+    transform: scale(1.5);
+  }
+  .leaderboard-container {
+    padding: 0.15em;
+    transform : scale(0.9);
+  }
+  .player-info {
+    padding: 0.8em;
+    gap: 0.3em;
+  }
+}
+
+@media (max-height : 741px) and (min-height : 739px) {
+  .game-container { 
+    background-size: contain;
+    background-position: center;
+    transform: scale(1.5);
+  }
+  .leaderboard-container {
+    padding: 0.1em;
+    transform : scale(0.8);
+  }
+  .player-info {
+    padding: 0.6em;
+    gap: 0.2em;
+  }
+}
+
+@media (max-height : 721px) and (min-height : 719px) {
+  .game-container { 
+    background-size: contain;
+    background-position: center;
+    transform: scale(2);
+  }
+  .leaderboard-container {
+    padding: 0.5em;
+    transform : scale(0.85);
+  }
+}
+
+@media (max-width : 345px) and (min-height : 343px) {
+  .game-container { 
+    background-size: contain;
+    background-position: center;
+    transform: scale(1.5);
+  }
+  .leaderboard-container {
+    padding: 0.5em;
+    transform : scale(0.85);
+  }
+  .player-info {
+    transform: scale(0.8);
+    padding: 10px 0px 0px 0px;
+  }
+}
+
+@media (min-height : 1000px) and (min-width : 760px) {
+  .game-container { 
+    background-size: contain;
+    background-position: center;
+    transform: scale(4);
+  }
+  .leaderboard-container {
+    padding: 60px 80px 0px 0px;
+    transform: scale(1.5);
+  }
+  .player-info {
+    padding: 50px 0px 0px 100px;
+    transform: scale(2);
+  }
+}
+
+@media (max-width : 860px) and (min-width : 700px) {
+  .game-container { 
+    background-size: contain;
+    background-position: center;
+    transform: scale(3);
+  }
+  .leaderboard-container {
+    padding: 40px 40px 0px 0px;
+    transform : scale(1.2);
+  }
+}
+
+@media (max-width : 700px) and (min-width : 440px) {
+  .game-container { 
+    background-size: contain;
+    background-position: center;
+    transform: scale(2);
+  }
+  .leaderboard-container {
+    padding: 4px 80px 0px 0px;
+    transform : scale(0.95);
+  }
+}
+
+@media (max-width : 1000px) and (min-width : 860px) {
+  .game-container { 
+    background-size: contain;
+    background-position: center;
+    transform: scale(3);
+  }
+  .leaderboard-container {
+    padding: 80px 80px 0px 0px;
+    transform : scale(2);
+  }
+}
+
+@media (max-width : 541px) and (min-width : 539px) {
+  .game-container { 
+    background-size: contain;
+    background-position: center;
+    transform: scale(2);
+  }
+  .leaderboard-container {
+    padding: 4px 60px 0px 0px;
+    transform : scale(0.9);
+  }
+}
+
+@media (max-height : 630px) and (max-width : 440px) {
+  .game-container { 
+    background-size: contain;
+    background-position: center;
+    transform: scale(2);
+  }
+  .leaderboard-container {
+    padding: 4px 5px 0px 0px;
+    transform : scale(0.95);
+  }
+}
+
+
+
+
+
 
 
