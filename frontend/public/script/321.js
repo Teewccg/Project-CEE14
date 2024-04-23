@@ -52,6 +52,8 @@ export async function handleCreateCoin() {
 
 // create a player character
 export async function handleCreateMember(userName){
+    let debounceTimeout;
+    const debounceDelay = 100;
     let {x,y} = getRandomSafeSpot();
     const existingUser = await getUserByUsername(userName);
     if (existingUser) {
@@ -90,8 +92,18 @@ export async function handleCreateMember(userName){
         gameContainer.appendChild(characterElement);
 
         if (playable) {
-          document.addEventListener("keydown", handleArrowPress);
-        }
+          document.addEventListener("keydown", debounce(handleArrowPress, debounceDelay));
+      }
+      
+      // Define debounced handleArrowPress function
+      function debounce(func, delay) {
+          return function(event) {
+              clearTimeout(debounceTimeout);
+              debounceTimeout = setTimeout(() => {
+                  func(event);
+              }, delay);
+          };
+      }
         
       // Define handleArrowPress function
       function handleArrowPress(event) {
